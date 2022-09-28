@@ -140,10 +140,10 @@ protected:
     int         _samplesTillAssert;
     int         _samplesTillHeldReload;
     int         _samplesTillHeld;
-    FunctionPointer _callbackAsserted;
-    FunctionPointer _callbackDeasserted;
-    FunctionPointer _callbackAssertedHeld;
-    FunctionPointer _callbackDeassertedHeld;
+    Callback<void(void)> _callbackAsserted;
+    Callback<void(void)> _callbackDeasserted;
+    Callback<void(void)> _callbackAssertedHeld;
+    Callback<void(void)> _callbackDeassertedHeld;
     
     /** initialise class
      *
@@ -205,7 +205,7 @@ public:
     void setSampleFrequency(int i = PINDETECT_SAMPLE_PERIOD) { 
         _sampleTime = i; 
         _prevState  = _in->read();        
-        _ticker->attach_us( this, &PinDetect::isr, _sampleTime );
+        _ticker->attach_us(mbed::callback(this, &PinDetect::isr), _sampleTime);
     }
     
     /** Set the value used as assert.
@@ -260,7 +260,7 @@ public:
      * @param function A C function pointer
      */
     void attach_asserted(void (*function)(void)) {
-        _callbackAsserted.attach( function );
+        _callbackAsserted = mbed::callback(function);
     }
     
     /** Attach a callback object/method 
@@ -288,7 +288,7 @@ public:
      */
     template<typename T>
     void attach_asserted(T *object, void (T::*member)(void)) {
-        _callbackAsserted.attach( object, member );        
+        _callbackAsserted = mbed::callback(object, member);
     }
     
     /** Attach a callback function 
@@ -312,7 +312,7 @@ public:
      * @param function A C function pointer
      */
     void attach_deasserted(void (*function)(void)) {
-        _callbackDeasserted.attach( function );
+        _callbackDeasserted = mbed::callback(function);
     }
     
     /** Attach a callback object/method
@@ -340,7 +340,7 @@ public:
      */
     template<typename T>
     void attach_deasserted(T *object, void (T::*member)(void)) {
-        _callbackDeasserted.attach( object, member );        
+        _callbackDeasserted = mbed::callback(object, member);
     }
     
     /** Attach a callback function 
@@ -364,7 +364,7 @@ public:
      * @param function A C function pointer
      */
     void attach_asserted_held(void (*function)(void)) {
-        _callbackAssertedHeld.attach( function );
+        _callbackAssertedHeld = mbed::callback(function);
     }
     
     /** Attach a callback object/method
@@ -392,7 +392,7 @@ public:
      */
     template<typename T>
     void attach_asserted_held(T *object, void (T::*member)(void)) {
-        _callbackAssertedHeld.attach( object, member );        
+        _callbackAssertedHeld = mbed::callback(object, member);
     }
     
     /** Attach a callback function 
@@ -416,7 +416,7 @@ public:
      * @param function A C function pointer
      */
     void attach_deasserted_held(void (*function)(void)) {
-        _callbackDeassertedHeld.attach( function );
+        _callbackDeassertedHeld = mbed::callback(function);
     }
     
     /** Attach a callback object/method
@@ -444,7 +444,7 @@ public:
      */
     template<typename T>
     void attach_deasserted_held(T *object, void (T::*member)(void)) {
-        _callbackDeassertedHeld.attach( object, member );        
+        _callbackDeassertedHeld = mbed::callback(object, member);
     }
     
     /** operator int()
