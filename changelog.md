@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.1] - 2022-12-06
+
+* Separate the code into source and declarations.
+* Fix bug that occurs on callback assertions.
+
 ## [2.0] - 2022-09-29
 
 Update the api to use the Mbed OS 6 callback api rather than `FunctionPointer`.
